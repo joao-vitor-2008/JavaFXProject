@@ -23,8 +23,10 @@
 hs_err_pid*
 replay_pid*
 
-# Settings
-.settings
+# Eclips Settings
+.settings/
+.classpath
+.project
 
 # Directories
 /target/
