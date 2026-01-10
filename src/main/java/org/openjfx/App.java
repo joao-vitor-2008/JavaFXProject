@@ -3,8 +3,11 @@ package org.openjfx;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.util.regex.Pattern;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -18,10 +21,6 @@ public class App extends Application {
 
   @Override
   public void start(Stage stage) {
-    // First and last name labels
-    Label firstNameLabel = new Label();
-    Label lastNameLabel = new Label();
-
     // Top HBox
     Label nameLabel = new Label("Type your complete name: ");
     TextField nameField = new TextField();
@@ -37,6 +36,7 @@ public class App extends Application {
 
     // root VBox
     VBox root = new VBox(10, nameBox, resBox);
+    root.setAlignment(Pos.BASELINE_CENTER);
     root.setPadding(new Insets(10));
 
     // Scene declaration
@@ -44,17 +44,22 @@ public class App extends Application {
     stage.setScene(scene);
     stage.show();
 
+    // Patterns to validate
+    Pattern p = Pattern.compile("^([A-Z][a-z]+)(\\s[A-Z][a-z]+)+$");
+
     // btn action method
     btn.setOnAction(event -> {
-      if (nameField.getText().contains(" ") && nameField.getText().isBlank() == false) {
-        String completeNameStr = nameField.getText();
+      resBox.getChildren().clear();
 
-        int space = completeNameStr.indexOf(" ");
+      String completeNameStr = nameField.getText().trim();
 
-        firstNameLabel.setText("Your first name is: " + completeNameStr.substring(0, space));
-        lastNameLabel.setText("Your last name is: " + completeNameStr.substring(space + 1));
+      if (p.matcher(completeNameStr).matches()) {
+        String[] parts = completeNameStr.split("\\s+");
 
-        resBox.getChildren().addAll(firstNameLabel, lastNameLabel);
+        for (int i = 0; i < parts.length; i++) {
+          Label name = new Label("Your " + (i + 1) + "° name is: " + parts[i]);
+          resBox.getChildren().add(name);
+        }
       } else {
         resBox.getChildren().add(warningLabel);
       }
