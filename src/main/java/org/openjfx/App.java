@@ -3,6 +3,7 @@ package org.openjfx;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafx.application.Application;
@@ -45,15 +46,15 @@ public class App extends Application {
     stage.show();
 
     // Patterns to validate
-    Pattern p = Pattern.compile("^([A-Z][a-z]+)(\\s[A-Z][a-z]+)+$");
+    Pattern pattern = Pattern.compile("^(\\p{Lu}\\p{Ll}+)(\\p{Z}+\\p{Lu}\\p{Ll}+)+$");
 
     // btn action method
     btn.setOnAction(event -> {
       resBox.getChildren().clear();
-
       String completeNameStr = nameField.getText().trim();
+      Matcher matcher = pattern.matcher(completeNameStr);
 
-      if (p.matcher(completeNameStr).matches()) {
+      if (matcher.matches()) {
         String[] parts = completeNameStr.split("\\s+");
 
         for (int i = 0; i < parts.length; i++) {
